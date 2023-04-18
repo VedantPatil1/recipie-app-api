@@ -11,7 +11,7 @@ from rest_framework import status
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
-ME_URL = reverse('user:ME_URL')
+ME_URL = reverse('user:me')
 
 
 def create_user(**params):
@@ -121,10 +121,10 @@ class PrivateUserApiTests(TestCase):
         self.user = create_user(
             email='test@example.com',
             password='testpass123',
-            name='Test Name',
+            name='Test name',
         )
         self.client = APIClient()
-        self.clent.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user)
 
     def test_retrive_profile_success(self):
         """Test retrieving profile for logged user."""
@@ -145,7 +145,7 @@ class PrivateUserApiTests(TestCase):
         """Test updating the user profile for the authenticated user."""
         payload = {'name': 'Updated name', 'password': 'newpassword123'}
 
-        res =self.clent.patch(ME_URL, payload['name'])
+        res =self.client.patch(ME_URL, payload)
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.name, payload['name'])
